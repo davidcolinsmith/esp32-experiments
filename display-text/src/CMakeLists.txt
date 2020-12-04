@@ -1,4 +1,3 @@
 idf_component_register(
-    SCRS "display.c"
-    INCLUDE_DIRS "."
-)	
+    SRCS "display.c" "u8g2_esp32_hal.c"
+    INCLUDE_DIRS ".")
