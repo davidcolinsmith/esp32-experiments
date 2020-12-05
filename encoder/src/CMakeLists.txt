@@ -1,0 +1,3 @@
+idf_component_register(
+    SRCS "encoder.c" "u8g2_esp32_hal.c"
+    INCLUDE_DIRS ".")
