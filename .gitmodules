@@ -7,3 +7,9 @@
 [submodule "clock-gate/components/u8g2"]
 	path = clock-gate/components/u8g2
 	url = https://github.com/olikraus/u8g2.git
+[submodule "clock-with-ui/components/esp32-rotary-encoder"]
+	path = clock-with-ui/components/esp32-rotary-encoder
+	url = https://github.com/DavidAntliff/esp32-rotary-encoder.git
+[submodule "clock-with-ui/components/u8g2"]
+	path = clock-with-ui/components/u8g2
+	url = https://github.com/olikraus/u8g2.git
