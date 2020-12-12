@@ -8,12 +8,14 @@
 #include "driver/gpio.h"
 #include "u8g2_esp32_hal.h"
 #include <rotary_encoder.h>
+#include "esp_timer.h"
 
 //gatout_config configuration
 #define GPIO_OUTPUT_IO_0   25
 #define GPIO_OUTPUT_IO_1   26
 #define GPIO_OUTPUT_IO_2   4
-#define GPIO_OUTPUT_PIN_SEL  ((1ULL<<GPIO_OUTPUT_IO_0) | (1ULL<<GPIO_OUTPUT_IO_1) | (1ULL<<GPIO_OUTPUT_IO_2))
+#define GPIO_OUTPUT_IO_3   27
+#define GPIO_OUTPUT_PIN_SEL  ((1ULL<<GPIO_OUTPUT_IO_0) | (1ULL<<GPIO_OUTPUT_IO_1) | (1ULL<<GPIO_OUTPUT_IO_2)| (1ULL<<GPIO_OUTPUT_IO_3))
 #define ESP_INTR_FLAG_DEFAULT 0
 
 //display_config configuration
@@ -82,29 +84,45 @@ void display_task (void *pvParameters) {
         vTaskDelete(NULL);
 }
 
+static void timer_callback()
+{
+    long int tempo;
+    tempo = ROTARY_VALUE / 60 / 1000000;
+    const esp_timer_create_args_t timer_args = {
+        .callback = &timer_callback,
+        /* name is optional, but may help identify the timer when debugging */
+        .name = "oneshot"
+    };
+    esp_timer_handle_t timer;
+    ESP_ERROR_CHECK(esp_timer_create(&timer_args, &timer));
+    /* The timer has been created but is not running yet */
+    ESP_ERROR_CHECK(esp_timer_start_once(timer, tempo));
+
+
+    gpio_set_level(GPIO_OUTPUT_IO_3, 1);
+    gpio_set_level(GPIO_OUTPUT_IO_3, 0);
+}
+
+
+void start_clock() {
+    long int tempo;
+    tempo = ROTARY_VALUE / 60 / 1000000;
+    const esp_timer_create_args_t timer_args = {
+        .callback = &timer_callback,
+        /* name is optional, but may help identify the timer when debugging */
+        .name = "oneshot"
+    };
+    esp_timer_handle_t timer;
+    ESP_ERROR_CHECK(esp_timer_create(&timer_args, &timer));
+    /* The timer has been created but is not running yet */
+    ESP_ERROR_CHECK(esp_timer_start_once(timer, tempo));
+}
+
+
 void app_main(void)
 {
-/*
-    init_display();
-
-    u8g2_t u8g2; // a structure which will contain all the data for one display
-    u8g2_Setup_ssd1306_i2c_128x32_univision_f(
-	&u8g2,
-	U8G2_R0,
-	//u8x8_byte_sw_i2c,
-	u8g2_esp32_i2c_byte_cb,
-	u8g2_esp32_gpio_and_delay_cb);  // init u8g2 structure
-    u8x8_SetI2CAddress(&u8g2.u8x8,0x78);
-
-    u8g2_InitDisplay(&u8g2); // send init sequence to the display, display is in sleep mode after this,
-
-    u8g2_SetPowerSave(&u8g2, 0); // wake up display
-    u8g2_SetFont(&u8g2, u8g2_font_ncenB14_tr);
-    u8g2_DrawStr(&u8g2, 2, 17, "Yoooo");
-    u8g2_SendBuffer(&u8g2);
-*/
-
     gateout_config();
+    start_clock();
     //encoder_config();
     const int SIZE = 16;
     int kick[16] = { 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 };
