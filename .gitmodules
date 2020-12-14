@@ -13,3 +13,9 @@
 [submodule "clock-with-ui/components/u8g2"]
 	path = clock-with-ui/components/u8g2
 	url = https://github.com/olikraus/u8g2.git
+[submodule "drumv1/components/tinyosc"]
+	path = drumv1/components/tinyosc
+	url = https://github.com/mhroth/tinyosc.git
+[submodule "drumv2/lib/u8g2"]
+	path = drumv2/lib/u8g2
+	url = https://github.com/olikraus/u8g2.git
