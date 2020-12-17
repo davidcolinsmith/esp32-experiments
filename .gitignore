@@ -1,5 +1,6 @@
 **.pio/
+**build/
 **/components/
 **.git/
 **Kconfig.probuild
-src/Kconfig.projbuild
+*/src/Kconfig.projbuild

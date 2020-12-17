@@ -7,13 +7,15 @@
 #include "esp_log.h"
 #include "nvs_flash.h"
 
-//#include "lwip/err.h"
-//#include "lwip/sockets.h"
-//#include "lwip/sys.h"
+#include "lwip/err.h"
+#include "lwip/sockets.h"
+#include "lwip/sys.h"
+#include <lwip/netdb.h>
 
 #include "clocking.h"
 #include "sequencer.h"
 #include "mywifi.h"
+#include "udp-server.h"
 
 void app_main(void)
 {
@@ -29,4 +31,7 @@ void app_main(void)
 
     // Gate/sequencer task start
     xTaskCreate(sequencer_task, "sequencer", 4096, NULL, 1, NULL);
+
+    // Start UDP server
+    xTaskCreate(udp_server_task, "udp_server", 4096, (void*)AF_INET, 5, NULL);
 }

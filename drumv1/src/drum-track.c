@@ -25,9 +25,16 @@
 #include "sdkconfig.h"
 #include "driver/gpio.h"
 
+#include "lwip/sockets.h"
+#include <lwip/netdb.h>
+#include "lwip/err.h"
+#include "lwip/sys.h"
+
 #include "display.h"
 #include "gate.h"
 #include "wifi.h"
+#include "osc.h"
+
 
 // Gate out GPIO Setup
 #define GPIO_OUTPUT_IO_0   25
@@ -62,6 +69,11 @@ void app_main(void)
     ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
     wifi_init_sta();
 
+    // Start UDP listener
+    // ESP_ERROR_CHECK(esp_event_loop_create_default());
+    xTaskCreate(udp_server_task, "udp_server", 4096, (void*)AF_INET, 5, NULL);
+
+
     // Setup Maths
     int64_t subbeat_duration_usec;
     int64_t measure_duration_usec;
@@ -95,8 +107,9 @@ void app_main(void)
 
     // Counter loop
     while (1) {
+
         int64_t current_time = esp_timer_get_time();
-        ESP_LOGI(TAG, "COUNTER: %d \n", COUNTER);
+        //ESP_LOGI(TAG, "COUNTER: %d \n", COUNTER);
         if (next_beat_time > current_time){
             vTaskDelay(10 / portTICK_PERIOD_MS);
         }

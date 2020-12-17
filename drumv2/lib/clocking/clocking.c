@@ -12,21 +12,20 @@
 
 static void periodic_timer_callback(void* arg);
 
-static const char* TAG = "example";
+static const char* TAG = "clocking";
 int64_t  NEXT_BEAT_TIME; // Global for app beat sync
 
 void clocking_task (void *pvParamenters) {
 //TODO probably put this beat duration business in a seperate function
-    int beats_per_measure = 4;
+    // int beats_per_measure = 4;
     int subbeats_per_beat = 1;
-    int beat_denomination = 4;
+    // int beat_denomination = 4;
     float beats_per_minute = 240.0;
     int seconds_per_minute = 60;
     long useconds_per_second = 1000000;
     // Setup Maths
     int64_t subbeat_duration_usec;
-    int64_t measure_duration_usec;
-    int64_t next_beat_time;
+    // int64_t measure_duration_usec;
     subbeat_duration_usec = seconds_per_minute * useconds_per_second / beats_per_minute / subbeats_per_beat ;
 
     // measure_duration_usec = subbeat_duration_usec * beats_per_measure / subbeats_per_beat;
